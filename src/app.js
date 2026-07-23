@@ -1,6 +1,6 @@
 const express = require('express');
 const helmet = require('helmet');
-const mongoSanitize = require('express-mongo-sanitize');
+const mongoSanitize = require('./middlewares/mongoSanitize');
 const rateLimit = require('express-rate-limit');
 const dotenv = require('dotenv');
 

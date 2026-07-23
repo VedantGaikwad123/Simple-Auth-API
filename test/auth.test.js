@@ -9,7 +9,11 @@ let app;
 
 test.before(async () => {
   // Start MongoDB Memory Server
-  mongoServer = await MongoMemoryServer.create();
+  mongoServer = await MongoMemoryServer.create({
+    instance: {
+      startupTimeout: 120000 // 2 minutes to allow downloading in slower environments
+    }
+  });
   const mongoUri = mongoServer.getUri();
   
   // Set test environment variables BEFORE importing app
