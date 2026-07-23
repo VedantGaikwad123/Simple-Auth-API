@@ -26,22 +26,17 @@ const userSchema = new mongoose.Schema(
 );
 
 // Pre-save hook to hash the password securely
-userSchema.pre('save', async function (next) {
+userSchema.pre('save', async function () {
   const user = this;
   
   // Only hash the password if it has been modified or is new
   if (!user.isModified('passwordHash')) {
-    return next();
+    return;
   }
   
-  try {
-    // Generate salt with 12 rounds (industry standard for security strength)
-    const salt = await bcrypt.genSalt(12);
-    user.passwordHash = await bcrypt.hash(user.passwordHash, salt);
-    next();
-  } catch (error) {
-    next(error);
-  }
+  // Generate salt with 12 rounds (industry standard for security strength)
+  const salt = await bcrypt.genSalt(12);
+  user.passwordHash = await bcrypt.hash(user.passwordHash, salt);
 });
 
 // Compare password method for validation during login

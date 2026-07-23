@@ -21,7 +21,7 @@ connectDB();
 app.use(helmet());
 
 // 3. Prevent NoSQL Query Injection (Mongo Sanitize)
-app.use(mongoSanitize());
+app.use(mongoSanitize);
 
 // 4. Rate Limiting Configurations
 // Global Rate Limiter: max 100 requests per 15 minutes
@@ -50,8 +50,12 @@ app.use(express.json({ limit: '10kb' }));
 const authRoutes = require('./routes/authRoutes');
 const protectedRoutes = require('./routes/protectedRoutes');
 
+// Apply strict rate limiting only to authentication endpoints
+app.use('/api/register', authLimiter);
+app.use('/api/login', authLimiter);
+
 // Apply routes
-app.use('/api', authLimiter, authRoutes); // Auth endpoints rate limited strictly
+app.use('/api', authRoutes);
 app.use('/api', protectedRoutes);
 
 // 7. 404 Route Handler
